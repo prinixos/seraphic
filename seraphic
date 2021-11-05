@@ -1,3 +1,16 @@
 #!/bin/bash
-mkdir ~/.config/seraphic/
-xml2csv -i https://www.youtube.com/feeds/videos.xml?channel_id=UCBdf0aiFd7n9uRiIX6JBvjQ -m https://raw.githubusercontent.com/prinixos/seraphic/main/mapping -o ~/.config/seraphic.csv
+if [ ! -d $XDG_CONFIG_HOME/seraphic ];then
+    mkdir $XDG_CONFIG_HOME/seraphic/
+fi
+
+if [ ! -f $XDG_CONFIG_HOME/seraphic/mapping ];then
+    curl "https://raw.githubusercontent.com/prinixos/seraphic/main/mapping" > $XDG_CONFIG_HOME"/seraphic/mapping"
+fi
+
+xml2csv -i https://www.youtube.com/feeds/videos.xml?channel_id=UCBdf0aiFd7n9uRiIX6JBvjQ -m $XDG_CONFIG_HOME/seraphic/mapping -o ~/.config/seraphic/seraphic.csv
+tail -n +2 ~/.config/seraphic/seraphic.csv > ~/.config/seraphic/seraphic.csv.tmp
+mv ~/.config/seraphic/seraphic.csv.tmp ~/.config/seraphic/seraphic.csv
+music=$(cat ~/.config/seraphic/seraphic.csv | dmenu -l 8 -p 'Choose: ')
+link=$(echo $music | awk -F ',' '{print $NF}')
+mpv --ytdl-format=140 "https://www.youtube.com/watch?v=$link"
+
