@@ -1,0 +1,13 @@
+{
+    "rowsPath": "//entry",
+    "columns": [
+        {
+            "header": "title",
+            "valuePath": "/title"
+        },
+        {
+            "header": "link",
+            "valuePath": "yt:videoId"
+        }
+    ]
+}
